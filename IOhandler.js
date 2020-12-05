@@ -48,10 +48,6 @@ const readDir = dir => {
         reject(err)
       };
       const pngFiles = files.filter(file => path.extname(file).toLowerCase() == ".png");
-      const filesWithPath = [];
-      for (const file of pngFiles) {
-        filesWithPath.push(path.join(dir, file));
-      };
       resolve(filesWithPath);
     });
   });
@@ -85,8 +81,7 @@ const grayScale = (pathIn, pathOut) => {
           this.data[i + 2] = gray;
           i = i + 3;
         }
-        this.pack().pipe(fs.createWriteStream(path.join(pathOut, path.basename(pathIn))));
-        resolve("done");
+        this.pack().pipe(fs.createWriteStream(path.join(pathOut, path.basename(pathIn)))).on("close", ()=> resolve("done"));
       });
   });
 };
